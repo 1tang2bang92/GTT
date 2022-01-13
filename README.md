@@ -14,7 +14,9 @@ feature
 install
 ---
 window: [\[download\]]()
+
 mac: [\[download\]]()
+
 linux: [\[download\]]()
 
 License
