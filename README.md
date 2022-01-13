@@ -14,9 +14,11 @@ feature
 install
 ---
 window: [\[download\]]()
+
 mac: [\[download\]]()
+
 linux: [\[download\]]()
 
 License
 ---
-GTT is MIT licensed.
+GTT is GPL-3.0 licensed.
