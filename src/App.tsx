@@ -5,24 +5,27 @@ import Workspace from './components/workspaceViewer/Index'
 import FloatButton from './components/Options/FloatButton'
 import Optoins from './components/Options/Index'
 import Resizable from './components/resizable/Resizable'
+import { Divider } from '@mui/material'
+import Adapter from './components/Adapter'
 
 function App() {
   const [isOptionPage, setOptionPage] = useState(false)
 
   return (
     <ApplicationContainer>
-      {isOptionPage ? <Optoins />
-        : (
-          <>
+      <Adapter />
+      {isOptionPage ? (
+        <Optoins />
+      ) : (
+        <>
+          <Resizable>
             <SideMenu />
+            {/* <Divider orientation="vertical" variant="middle" /> */}
             <Workspace />
-            <FloatButton onClick={() => setOptionPage(true)} />
-          </>
+          </Resizable>
+          <FloatButton onClick={() => setOptionPage(true)} />
+        </>
       )}
-      {/* <Resizable>
-        <div>1</div>
-        <div>2</div>
-      </Resizable> */}
     </ApplicationContainer>
   )
 }
