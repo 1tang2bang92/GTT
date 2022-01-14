@@ -11,14 +11,13 @@ function App() {
 
   return (
     <ApplicationContainer>
-      {isOptionPage ? (
-        <Optoins />
-      ) : (
-        <>
-          <SideMenu />
-          <Workspace />
-          <FloatButton onClick={() => setOptionPage(true)} />
-        </>
+      {isOptionPage ? <Optoins />
+        : (
+          <>
+            <SideMenu />
+            <Workspace />
+            <FloatButton onClick={() => setOptionPage(true)} />
+          </>
       )}
       {/* <Resizable>
         <div>1</div>
