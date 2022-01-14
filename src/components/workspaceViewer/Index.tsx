@@ -20,9 +20,8 @@ const Workspace = () => {
 const WorkspaceContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 70%;
+  width: 100%;
   height: 100%;
-  background-color: blue;
 `
 const DataAreaContainer = styled.div`
   display: flex;

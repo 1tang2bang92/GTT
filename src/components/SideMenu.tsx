@@ -12,7 +12,7 @@ export default SideMenu
 
 const MenuWarp = styled.div`
   display: flex;
-  width: 30%;
+  // width: 30%;
+  width: 100%;
   height: 100%;
-  background-color: black;
 `
