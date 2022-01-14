@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Divider } from '@mui/material'
-import { ReactNode, useState, useEffect, useRef, forwardRef } from 'react'
+import { ReactNode, useState, useRef, forwardRef } from 'react'
 import { useEventListener } from '../../hooks/event'
 
 const ResizableWapper = forwardRef(
@@ -23,12 +23,12 @@ const Resizable = (props: { children: ReactNode[] }) => {
   const { children } = props
   const first = useRef<HTMLDivElement>(null)
   const [click, setClick] = useState(false)
-  const [width, setWidth] = useState({ cur: 320, ref: 0 })
+  const [width, setWidth] = useState(320)
 
   const onMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     console.log(first.current!!.offsetWidth)
     setClick(true)
-    setWidth({ ...width, cur: first.current!!.offsetWidth })
+    setWidth(first.current!!.offsetWidth)
   }
 
   useEventListener('mouseup', (event: MouseEvent) => {
@@ -39,14 +39,14 @@ const Resizable = (props: { children: ReactNode[] }) => {
     'mousemove',
     (event: MouseEvent) => {
       if (!click) return
-      setWidth({ ...width, cur: width.cur + event.movementX })
+      setWidth(width + event.movementX)
     },
     []
   )
 
   return (
     <ResizableContainer>
-      <ResizableWapper ref={first} style={{ flexGrow: 0, width: width.cur }}>
+      <ResizableWapper ref={first} style={{ flexGrow: 0, width: width }}>
         {children[0]}
       </ResizableWapper>
       <Splitter onMouseDown={onMouseDown} />

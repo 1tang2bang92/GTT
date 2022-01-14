@@ -5,7 +5,6 @@ import Workspace from './components/workspaceViewer/Index'
 import FloatButton from './components/Options/FloatButton'
 import Optoins from './components/Options/Index'
 import Resizable from './components/resizable/Resizable'
-import { Divider } from '@mui/material'
 import Adapter from './components/Adapter'
 
 function App() {

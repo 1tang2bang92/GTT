@@ -4157,6 +4157,27 @@ fast-levenshtein@^2.0.6, fast-levenshtein@~2.0.6:
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
 
+fastify-cors@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/fastify-cors/-/fastify-cors-6.0.2.tgz#4fd5102549659e9b34d252fd7ee607b63d021390"
+  integrity sha512-sE0AOyzmj5hLLRRVgenjA6G2iOGX35/1S3QGYB9rr9TXelMZB3lFrXy4CzwYVOMiujJeMiLgO4J7eRm8sQSv8Q==
+  dependencies:
+    fastify-plugin "^3.0.0"
+    vary "^1.1.2"
+
+fastify-plugin@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/fastify-plugin/-/fastify-plugin-3.0.0.tgz#cf1b8c8098e3b5a7c8c30e6aeb06903370c054ca"
+  integrity sha512-ZdCvKEEd92DNLps5n0v231Bha8bkz1DjnPP/aEz37rz/q42Z5JVLmgnqR4DYuNn3NXAO3IDCPyRvgvxtJ4Ym4w==
+
+fastify-websocket@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/fastify-websocket/-/fastify-websocket-4.0.0.tgz#7d22e0fbd15cf64628b3fb77010f65e4880942b5"
+  integrity sha512-XeeE2r4SkkLBp83NZ3BKCEdR6KFPEtiiIAUrvJhsvLJFRCV6BCnF5ZdchZ6ghPQ5rJ1VwcWlajuXHlQWwXX/YQ==
+  dependencies:
+    fastify-plugin "^3.0.0"
+    ws "^8.0.0"
+
 fastq@^1.6.0:
   version "1.13.0"
   resolved "https://registry.yarnpkg.com/fastq/-/fastq-1.13.0.tgz#616760f88a7526bdfc596b7cab8c18938c36b98c"
@@ -8294,7 +8315,7 @@ v8-to-istanbul@^8.1.0:
     convert-source-map "^1.6.0"
     source-map "^0.7.3"
 
-vary@~1.1.2:
+vary@^1.1.2, vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
@@ -8733,6 +8754,11 @@ ws@^7.4.6:
   version "7.5.6"
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.6.tgz#e59fc509fb15ddfb65487ee9765c5a51dec5fe7b"
   integrity sha512-6GLgCqo2cy2A2rjCNFlxQS6ZljG/coZfZXclldI8FB/1G3CCI36Zd8xy2HrFVACi8tfk5XrgLQEk+P0Tnz9UcA==
+
+ws@^8.0.0:
+  version "8.4.1"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.4.1.tgz#ce1a17e553d2b794e017fa94887808db5c67f614"
+  integrity sha512-6eqQ4yN2y2xv8b+BgbkUzPPyfo/PDl3VOWb06ZE0jIFYwuHMsMQN6F7o84yxJYCblfCRAxzpU59We4Rr4w0Luw==
 
 ws@^8.1.0:
   version "8.4.0"
