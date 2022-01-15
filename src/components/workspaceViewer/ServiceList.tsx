@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import { useMessage, usePostMessage } from '../../hooks/event'
 import { useService } from '../../hooks/grpc'
 import Service from './Service'
 

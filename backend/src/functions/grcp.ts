@@ -1,4 +1,4 @@
-import { load } from '@grpc/proto-loader'
+import { load, PackageDefinition } from '@grpc/proto-loader'
 import * as fs from 'fs/promises'
 import * as path from 'path'
 
@@ -26,23 +26,21 @@ export async function getPackageDefinition(name: string) {
   })
 }
 
-export async function getServices(name: string) {
-  const proto = await getPackageDefinition(name)
+export async function getServices(proto: PackageDefinition) {
   return Object.keys(proto).filter(x => !('type' in proto[x]))
 }
 
 export async function getAllServices() {
   const protoFiles = await getProtoList()
-  const protos = await Promise.all(protoFiles.map(getServices))
+  const protos = await Promise.all((await Promise.all(protoFiles.map(getPackageDefinition))).map(getServices))
   return protos.flat()
 }
 
-export async function getMessages(name: string) {
-  const proto = await getPackageDefinition(name)
+export async function getMessages(proto: PackageDefinition) {
   return Object.keys(proto).filter(x => 'type' in proto[x])
 }
 
 ;(async () => {
-  const r = await getPackageDefinition('hello.proto')
-  console.log(r['helloworld.Greeter'])
+  const r = await getPackageDefinition('hello.proto') as any
+  console.log(r['helloworld.Greeter']['Hello']['requestType']['type']['field'])
 })()

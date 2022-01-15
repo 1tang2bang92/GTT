@@ -30,7 +30,7 @@ const Service = (props: { title: string }) => {
         <ExpandIcon open={open} onClick={onClick} />
         <ServiceTitle>{title}</ServiceTitle>
       </ServiceTopBar>
-      {open ? <div>test</div> : null}
+      {open ? <Paper variant="outlined" square>test</Paper> : null}
     </ServiceContainer>
   )
 }
