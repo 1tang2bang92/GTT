@@ -1,5 +1,5 @@
 import { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify'
-import { getAllServices, getProtoList } from '../functions/grcp'
+import { getAllServiceNames, getProtoList } from '../functions/grcp'
 
 const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   fastify.post(
@@ -15,7 +15,7 @@ const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       if (command === 'get-proto-list') {
         return await getProtoList()
       } else if (command === 'get-services') {
-        return await getAllServices()
+        return await getAllServiceNames()
       } else {
         return {}
       }

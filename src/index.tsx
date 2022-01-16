@@ -9,13 +9,18 @@ ReactDOM.render(
       * {
         box-sizing: border-box;
       }
-      body {
-        margin: 0px;
-        padding: 0px;
-      }
+      
       html, body, #root {
         width: 100%;
         height: 100%;
+      }
+
+      html {
+        overflow: hidden;
+      }
+      body {
+        margin: 0px;
+        padding: 0px;
       }
     `}/>
     <App />

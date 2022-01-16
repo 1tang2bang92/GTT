@@ -66,6 +66,7 @@ const ResizableContainer = styled.div`
 `
 
 const ResizableSplitter = styled(Divider)`
+  width: 4px;
   cursor: col-resize;
   transition-duration: 0.2s;
   // &:hover {
