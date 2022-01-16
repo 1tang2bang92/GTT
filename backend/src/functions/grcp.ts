@@ -1,8 +1,14 @@
+import { loadPackageDefinition } from '@grpc/grpc-js'
 import { AnyDefinition, load, PackageDefinition } from '@grpc/proto-loader'
 import * as fs from 'fs/promises'
 import * as path from 'path'
 
-export async function getProtoList() {
+function removeDuplicates<T>(arr: T[]) {
+  // return arr.filter((x, i) => arr.indexOf(x) === i)
+  return Array.from(new Set(arr))
+}
+
+export async function getProtoFileList() {
   const fileList = await fs.readdir(`proto`)
   return fileList.filter(x => x.endsWith('.proto'))
 }
@@ -26,22 +32,46 @@ export async function getPackageDefinition(name: string) {
   })
 }
 
-export function isMessage(v: AnyDefinition) {
-  return 'type' in v
+export function getGrpcObject(pd: PackageDefinition) {
+  return loadPackageDefinition(pd)
 }
 
-export function isService(v: AnyDefinition) {
-  return !('type' in v)
+export function isPackage(ad: AnyDefinition) {
+  // return 'type' in ad
 }
 
-export async function getServiceNames(proto: PackageDefinition) {
-  return Object.entries(proto)
+export function isMessage(ad: AnyDefinition) {
+  // return 'type' in ad
+  return !!ad.type
+}
+
+export function isService(ad: AnyDefinition) {
+  // return !('type' in ad)
+  return !ad.type
+}
+export function getPackageNames(pd: PackageDefinition) {
+  const packageNames = Object.keys(pd).map(x =>
+    x.split('.').slice(0, -1).join('.')
+  )
+  return removeDuplicates(packageNames)
+}
+
+export async function getAllPackageNames() {
+  const protoFiles = await getProtoFileList()
+  const protos = (await Promise.all(protoFiles.map(getPackageDefinition))).map(
+    getPackageNames
+  )
+  return removeDuplicates(protos.flat())
+}
+
+export function getServiceNames(pd: PackageDefinition) {
+  return Object.entries(pd)
     .filter(([_, v]) => isService(v))
-    .map(([k, _]) => k)
+    .map(([k, _]) => k.split('.').pop()!!)
 }
 
-export async function getServices(proto: PackageDefinition) {
-  return Object.entries(proto)
+export function getServices(pd: PackageDefinition) {
+  return Object.entries(pd)
     .filter(([k, v]) => isService(v))
     .reduce<Record<string, AnyDefinition>>((acc, [k, v]) => {
       acc[k] = v
@@ -54,22 +84,20 @@ export async function getServices(proto: PackageDefinition) {
 }
 
 export async function getAllServiceNames() {
-  const protoFiles = await getProtoList()
-  const protos = await Promise.all(
-    (
-      await Promise.all(protoFiles.map(getPackageDefinition))
-    ).map(getServiceNames)
+  const protoFiles = await getProtoFileList()
+  const protos = (await Promise.all(protoFiles.map(getPackageDefinition))).map(
+    getServiceNames
   )
   return protos.flat()
 }
 
-export async function getMessageNames(proto: PackageDefinition) {
+export function getMessageNames(proto: PackageDefinition) {
   return Object.entries(proto)
     .filter(([_, v]) => isMessage(v))
     .map(([k, _]) => k)
 }
 
-export async function getMessages(proto: PackageDefinition) {
+export function getMessages(proto: PackageDefinition) {
   return Object.entries(proto)
     .filter(([k, v]) => isMessage(v))
     .reduce<Record<string, AnyDefinition>>((acc, [k, v]) => {
@@ -77,8 +105,3 @@ export async function getMessages(proto: PackageDefinition) {
       return acc
     }, {})
 }
-
-;(async () => {
-  const r = (await getPackageDefinition('hello.proto')) as any
-  console.log(r['helloworld.Greeter']['Hello']['requestType']['type']['field'])
-})()

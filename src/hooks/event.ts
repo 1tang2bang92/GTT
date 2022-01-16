@@ -21,8 +21,8 @@ export const useMessage = (
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handler, ...deps])
 
-export const usePostMessage = (message: any) =>
+export const usePostMessage = (message: any, deps: any[] = []) =>
   useEffect(() => {
     window.postMessage(message)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [...deps])
