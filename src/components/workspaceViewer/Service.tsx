@@ -1,8 +1,10 @@
 import styled from '@emotion/styled'
+import { MethodDefinition } from '@grpc/proto-loader'
 import MenuIcon from '@mui/icons-material/Menu'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import { Paper } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { When } from '../Condtition'
 
 const ExpandIcon = (props: {
   onClick: (event: React.MouseEvent) => any
@@ -16,9 +18,16 @@ const ExpandIcon = (props: {
   )
 }
 
-const Service = (props: { title: string }) => {
-  const { title } = props
+const Service = (props: {
+  title: string
+  methods: [string, MethodDefinition<object, object>][]
+}) => {
+  const { title, methods } = props
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    setOpen(false)
+  }, [props])
 
   const onClick = (event: React.MouseEvent) => {
     setOpen(!open)
@@ -30,7 +39,13 @@ const Service = (props: { title: string }) => {
         <ExpandIcon open={open} onClick={onClick} />
         <ServiceTitle>{title}</ServiceTitle>
       </ServiceTopBar>
-      {open ? <Paper variant="outlined" square>test</Paper> : null}
+      <When condition={open}>
+        <Paper variant="outlined" square>
+          {methods.map((e, i) => (
+            <div key={`div-${i}`}>{e[0]}</div>
+          ))}
+        </Paper>
+      </When>
     </ServiceContainer>
   )
 }

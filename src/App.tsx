@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import styled from '@emotion/styled'
 import SideMenu from './components/SideMenu'
 import Workspace from './components/workspaceViewer/Index'
@@ -6,6 +6,7 @@ import FloatButton from './components/Options/FloatButton'
 import Optoins from './components/Options/Index'
 import Resizable from './components/resizable/Resizable'
 import Adapter from './components/Adapter'
+import { False, If, True } from './components/Condtition'
 
 function App() {
   const [isOptionPage, setOptionPage] = useState(false)
@@ -13,18 +14,18 @@ function App() {
   return (
     <ApplicationContainer>
       <Adapter />
-      {isOptionPage ? (
-        <Optoins />
-      ) : (
-        <>
+      <If condition={isOptionPage}>
+        <True>
+          <Optoins />
+        </True>
+        <False>
           <Resizable>
             <SideMenu />
-            {/* <Divider orientation="vertical" variant="middle" /> */}
             <Workspace />
           </Resizable>
           <FloatButton onClick={() => setOptionPage(true)} />
-        </>
-      )}
+        </False>
+      </If>
     </ApplicationContainer>
   )
 }

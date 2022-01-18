@@ -1,15 +1,18 @@
 import styled from '@emotion/styled'
-import { useService } from '../../hooks/grpc'
+import { getMethods, isService } from '../../functions/grpc'
+import { usePackage } from '../../hooks/workspace'
 import Service from './Service'
 
 const ServiceList = () => {
-  const services = useService()
+  const packages = usePackage()
 
   return (
     <ServiceListWarp>
-      {services.map((x, i) => (
-        <Service key={`service-${i}`} title={x}></Service>
-      ))}
+      {packages
+        .filter(isService)
+        .map((x, i) => (
+          <Service key={`service-${i}`} title={x[0]} methods={getMethods(x)}></Service>
+        ))}
     </ServiceListWarp>
   )
 }

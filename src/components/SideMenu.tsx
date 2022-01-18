@@ -14,16 +14,25 @@ import WorkspacesIcon from '@mui/icons-material/Workspaces' //package
 import DataObjectIcon from '@mui/icons-material/DataObject' //service
 import FunctionsIcon from '@mui/icons-material/Functions' //rpc
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail' //message
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import React, { Children, ReactNode, useState } from 'react'
-import { usePackage } from '../hooks/grpc'
+import { useSetPackage, useWorkspace } from '../hooks/workspace'
+
+import { openFileBrowser } from '../functions/openFileBrowser'
+import { getAllPackageNames, getAnyDefinitionsByPackageName } from '../functions/grpc'
+import { PackageDefinition } from '@grpc/proto-loader'
 
 const ExpandableList = (props: { title: string; children?: ReactNode }) => {
   const { children, title } = props
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
 
   const handleClick = (_: React.MouseEvent) => {
     setOpen(!open)
+  }
+
+  const deleteWorksapce = (event: React.MouseEvent) => {
+    event.stopPropagation()
   }
 
   return (
@@ -31,6 +40,7 @@ const ExpandableList = (props: { title: string; children?: ReactNode }) => {
       <ListItemButton onClick={handleClick}>
         <WorkspacesIcon style={{ marginRight: '10px' }} />
         <ListItemText primary={title} />
+        <DeleteIcon onClick={deleteWorksapce} />
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
@@ -54,37 +64,31 @@ const ExpandableListItem = (props: {
 }
 
 const SideMenu = () => {
-  const packages = usePackage()
-  // const [list, setList] = useState([])
-  // const handleAddButtonClick = (_: React.MouseEvent) => {}
+  const workspaces = useWorkspace()
+  const setPackage = useSetPackage()
 
-  const handleListClick = (name: string, _: React.MouseEvent) => {
+  const handleListClick = (pds:PackageDefinition[] , name: string, _: React.MouseEvent) => {
+    setPackage(getAnyDefinitionsByPackageName(pds, name))
   }
 
   return (
     <MenuWarp>
       <List>
-        <ExpandableList title="test">
-          {packages.map((e, i) => (
-            <ExpandableListItem
-              // key={`ExpandableListItem-${i}`}
-              title={e}
-              onClick={event => handleListClick(e, event)}
-            />
-          ))}
-        </ExpandableList>
+        {workspaces.map((e0: any, i0: number) => (
+          <ExpandableList key={`ExpandableList-${i0}`} title={e0.title}>
+            {getAllPackageNames(e0.packages).map((e1: any, i1: number) => (
+              <ExpandableListItem
+                key={`ExpandableListItem-${i1}`}
+                title={e1}
+                onClick={event => handleListClick(e0.packages, e1, event)}
+              />
+            ))}
+          </ExpandableList>
+        ))}
       </List>
-      <Fab color="primary" aria-label="add">
+      <Fab color="primary" aria-label="add" onClick={openFileBrowser}>
         <AddIcon />
       </Fab>
-      {/* 
-        <label htmlFor="contained-button-file">
-          <Input accept="file" webkitdirectory directory />
-          <Fab color="primary" aria-label="add" onClick={handleAddButtonClick}>
-            <AddIcon />
-          </Fab>
-        </label>
-      */}
     </MenuWarp>
   )
 }
@@ -98,6 +102,7 @@ const MenuWarp = styled.div`
   gap: 10px;
   width: 100%;
   height: 100%;
+  overflow-y: auto;
   > ul {
     width: 100%;
   }

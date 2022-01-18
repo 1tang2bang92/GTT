@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
+    "@grpc/proto-loader": "^0.6.9",
     "@mui/icons-material": "^5.2.5",
     "@mui/material": "^5.2.8",
     "@types/node": "^17.0.8",
@@ -40,7 +41,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "@types/ws": "^8.2.2"
-  }
+  "devDependencies": {}
 }

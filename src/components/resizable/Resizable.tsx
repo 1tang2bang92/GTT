@@ -26,7 +26,7 @@ const Resizable = (props: { children: ReactNode[] }) => {
   const [width, setWidth] = useState(320)
 
   const onMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
-    console.log(first.current!!.offsetWidth)
+    //console.log(first.current!!.offsetWidth)
     setClick(true)
     setWidth(first.current!!.offsetWidth)
   }
