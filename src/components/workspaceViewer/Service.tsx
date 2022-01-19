@@ -1,20 +1,80 @@
 import styled from '@emotion/styled'
-import { MethodDefinition } from '@grpc/proto-loader'
+import { MessageTypeDefinition, MethodDefinition } from '@grpc/proto-loader'
 import MenuIcon from '@mui/icons-material/Menu'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
-import { Paper } from '@mui/material'
-import { useEffect, useState } from 'react'
-import { When } from '../Condtition'
+import { Button, Paper, Divider } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 
-const ExpandIcon = (props: {
-  onClick: (event: React.MouseEvent) => any
-  open: boolean
+const ExpandIcon = (props: { open: boolean }) => {
+  const { open } = props
+  return open ? <StyledMenuOpenIcon /> : <StyledMenuIcon />
+}
+
+const Message = (props: { msg: MessageTypeDefinition }) => {
+  const { msg } = props
+  const type = msg.type as any
+  const field = type.field as any[]
+  console.log(msg)
+  const result = field.reduce<any>((acc, cur) => {
+    acc[cur.name] = cur.typeName || cur.type.substring(5)
+    return acc
+  }, {})
+  return (
+    <pre>
+      {/* {type.name} */}{JSON.stringify(result, null, 2)}
+    </pre>
+  )
+}
+
+const MessageType = (props: {
+  msg: MessageTypeDefinition
+  stream: boolean
 }) => {
-  const { open, onClick } = props
-  return open ? (
-    <StyledMenuOpenIcon onClick={onClick} />
-  ) : (
-    <StyledMenuIcon onClick={onClick} />
+  const { msg, stream } = props
+  const type = msg.type as any
+  return (
+    <MessageWarper elevation={6}>
+      <MessageName>{`${stream ? 'stream' : ''} ${type.name}`}</MessageName>
+      <Divider />
+      <Message msg={msg}></Message>
+    </MessageWarper>
+  )
+}
+
+const RPC = (props: {
+  method: MethodDefinition<object, object>
+  name: string
+}) => {
+  const { method, name } = props
+
+  const sendMessage = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const target = event.currentTarget
+    const formData = new FormData(target)
+    const iter = formData.entries()
+    let iterResult = iter.next()
+
+    while (!iterResult.done) {
+      const [id, value] = iterResult.value
+      console.log(id, value)
+      iterResult = iter.next()
+    }
+  }
+
+  return (
+    <RPCMethodContainer>
+      <RPCMethodName>
+        {name}
+        <MessageType msg={method.requestType} stream={method.requestStream} />
+        <MessageType msg={method.responseType} stream={method.responseStream} />
+      </RPCMethodName>
+      <form onSubmit={sendMessage}>
+        <RPCTestTextAria name="code" aria-label="textaria"></RPCTestTextAria>
+        <Button variant="contained" type="submit">
+          Send
+        </Button>
+      </form>
+    </RPCMethodContainer>
   )
 }
 
@@ -29,23 +89,25 @@ const Service = (props: {
     setOpen(false)
   }, [props])
 
-  const onClick = (event: React.MouseEvent) => {
+  const onClick = (_: React.MouseEvent) => {
     setOpen(!open)
   }
 
   return (
     <ServiceContainer>
-      <ServiceTopBar variant="outlined" square>
-        <ExpandIcon open={open} onClick={onClick} />
+      <ServiceTopBar variant="outlined" elevation={3} onClick={onClick}>
+        <ExpandIcon open={open} />
         <ServiceTitle>{title}</ServiceTitle>
       </ServiceTopBar>
-      <When condition={open}>
-        <Paper variant="outlined" square>
-          {methods.map((e, i) => (
-            <div key={`div-${i}`}>{e[0]}</div>
-          ))}
-        </Paper>
-      </When>
+      <DataContainer>
+        {open && (
+          <DataWarper variant="elevation" elevation={6}>
+            {methods.map(([name, method], idx) => (
+              <RPC key={`${idx}`} name={name} method={method} />
+            ))}
+          </DataWarper>
+        )}
+      </DataContainer>
     </ServiceContainer>
   )
 }
@@ -61,6 +123,11 @@ const ServiceContainer = styled.div`
 const ServiceTopBar = styled(Paper)`
   display: flex;
   width: 100%;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 `
 
 const StyledMenuIcon = styled(MenuIcon)`
@@ -79,4 +146,43 @@ const ServiceTitle = styled.h2`
   margin: auto 0px;
   width: 100%;
   text-align: center;
+`
+const DataContainer = styled.div`
+  margin-left: 4rem;
+`
+
+const DataWarper = styled(Paper)`
+  padding: 1rem;
+`
+
+const RPCMethodContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-left: 4rem;
+  width: 100%;
+`
+
+const RPCMethodName = styled.h2`
+  margin: 0.5rem 0px;
+`
+
+const RPCTestTextAria = styled.textarea`
+  outline: none;
+  resize: none;
+  width: 100%;
+  height: 8rem;
+`
+
+const MessageWarper = styled(Paper)`
+  padding: 10px;
+  > * {
+    margin: 0px;
+  }
+  > hr {
+    margin: 10px 0px;
+  }
+`
+
+const MessageName = styled.h5`
+
 `
