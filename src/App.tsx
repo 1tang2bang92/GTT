@@ -6,7 +6,6 @@ import FloatButton from './components/Options/FloatButton'
 import Optoins from './components/Options/Index'
 import Resizable from './components/resizable/Resizable'
 import Adapter from './components/Adapter'
-import { False, If, True } from './components/Condtition'
 
 function App() {
   const [isOptionPage, setOptionPage] = useState(false)
@@ -14,18 +13,17 @@ function App() {
   return (
     <ApplicationContainer>
       <Adapter />
-      <If condition={isOptionPage}>
-        <True>
-          <Optoins />
-        </True>
-        <False>
+      {isOptionPage ? (
+        <Optoins />
+      ) : (
+        <>
           <Resizable>
             <SideMenu />
             <Workspace />
           </Resizable>
           <FloatButton onClick={() => setOptionPage(true)} />
-        </False>
-      </If>
+        </>
+      )}
     </ApplicationContainer>
   )
 }
