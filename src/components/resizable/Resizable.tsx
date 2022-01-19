@@ -69,6 +69,10 @@ const ResizableSplitter = styled(Divider)`
   width: 4px;
   cursor: col-resize;
   transition-duration: 0.2s;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   // &:hover {
   //   margin: 0px -2px;
   //   width: 8px;
