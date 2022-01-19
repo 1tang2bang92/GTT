@@ -14,13 +14,13 @@ import WorkspacesIcon from '@mui/icons-material/Workspaces' //package
 import DataObjectIcon from '@mui/icons-material/DataObject' //service
 import FunctionsIcon from '@mui/icons-material/Functions' //rpc
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail' //message
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete'
 
-import React, { Children, ReactNode, useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { useSetPackage, useWorkspace } from '../hooks/workspace'
 
 import { openFileBrowser } from '../functions/openFileBrowser'
-import { getAllPackageNames, getAnyDefinitionsByPackageName } from '../functions/grpc'
+import { getServices } from '../functions/grpc'
 import { PackageDefinition } from '@grpc/proto-loader'
 
 const ExpandableList = (props: { title: string; children?: ReactNode }) => {
@@ -31,16 +31,11 @@ const ExpandableList = (props: { title: string; children?: ReactNode }) => {
     setOpen(!open)
   }
 
-  const deleteWorksapce = (event: React.MouseEvent) => {
-    event.stopPropagation()
-  }
-
   return (
     <>
       <ListItemButton onClick={handleClick}>
         <WorkspacesIcon style={{ marginRight: '10px' }} />
         <ListItemText primary={title} />
-        <DeleteIcon onClick={deleteWorksapce} />
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
@@ -64,27 +59,29 @@ const ExpandableListItem = (props: {
 }
 
 const SideMenu = () => {
-  const workspaces = useWorkspace()
+  const workspace = useWorkspace()
   const setPackage = useSetPackage()
 
-  const handleListClick = (pds:PackageDefinition[] , name: string, _: React.MouseEvent) => {
-    setPackage(getAnyDefinitionsByPackageName(pds, name))
+  console.log(workspace)
+
+  const handleListClick = (pd: PackageDefinition, _: React.MouseEvent) => {
+    setPackage(getServices(pd))
   }
 
   return (
     <MenuWarp>
       <List>
-        {workspaces.map((e0: any, i0: number) => (
-          <ExpandableList key={`ExpandableList-${i0}`} title={e0.title}>
-            {getAllPackageNames(e0.packages).map((e1: any, i1: number) => (
+        {workspace && (
+          <ExpandableList title={workspace.title}>
+            {workspace.packages.map((pkg, idx1) => (
               <ExpandableListItem
-                key={`ExpandableListItem-${i1}`}
-                title={e1}
-                onClick={event => handleListClick(e0.packages, e1, event)}
+                key={`ExpandableListItem-${idx1}`}
+                title={pkg.fileName}
+                onClick={event => handleListClick(pkg.origin, event)}
               />
             ))}
           </ExpandableList>
-        ))}
+        )}
       </List>
       <Fab color="primary" aria-label="add" onClick={openFileBrowser}>
         <AddIcon />
