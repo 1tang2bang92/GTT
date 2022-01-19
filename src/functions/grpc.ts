@@ -1,4 +1,21 @@
-import { AnyDefinition, MethodDefinition, PackageDefinition } from '@grpc/proto-loader'
+import {
+  AnyDefinition,
+  MethodDefinition,
+  PackageDefinition,
+} from '@grpc/proto-loader'
+
+export interface Workspace {
+  title: string
+  packages: Package[]
+}
+
+export interface Package {
+  fileName: string
+  package: string
+  service: AnyDefinition[]
+  message: AnyDefinition[]
+  origin: PackageDefinition
+}
 
 function removeDuplicates<T>(arr: T[]) {
   // return arr.filter((x, i) => arr.indexOf(x) === i)
@@ -93,7 +110,7 @@ export function getServicesByPackageName(
 }
 
 export function getMethods(any: AnyDefinition | [string, AnyDefinition]) {
-  const ad = Array.isArray(any) ? any[1] : any;
+  const ad = Array.isArray(any) ? any[1] : any
 
   if (ad.type) return []
 
