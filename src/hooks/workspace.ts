@@ -1,5 +1,6 @@
 import { AnyDefinition } from '@grpc/proto-loader'
 import { useState } from 'react'
+import { Workspace } from '../functions/grpc'
 import { useMessageAny, usePostMessage } from './event'
 
 // const checkProperty = (obj: any, name: string, value: T) => {
@@ -38,7 +39,7 @@ export const useSetPackage = () => {
 }
 
 export const useWorkspace = () => {
-  const [state, setState] = useState<any[]>(JSON.parse(window.localStorage.getItem('workspace') ?? '[]'))
+  const [state, setState] = useState<Workspace>(JSON.parse(window.localStorage.getItem('workspace') ?? 'null'))
   const command = 'get-workspace'
 
   useMessageAny((event: MessageEvent) => {
@@ -50,7 +51,7 @@ export const useWorkspace = () => {
     if (!data.data) return
 
     console.log(data)
-    const workspace = [...state, data.data]
+    const workspace = data.data
     window.localStorage.setItem('workspace', JSON.stringify(workspace))
     setState(workspace)
   })
